@@ -1,52 +1,61 @@
 import math
 
+from dataclasses	import dataclass
+from sympy		import mod_inverse, randprime
+from typing		import Tuple
+
+@dataclass
+class RSAKey:
+	length		: int
+	public		: int
+	exponent	: int
+	private		: int
+
+class RSAKeyGenerator:
+	def __init__(self, keyLength = 2048):
+		self.keyLength = keyLength
+
+	def generateKeys(self) -> RSAKey:
+		p, q = self.generatePQ()
+		self.n = p * q
+		self.totient = (p - 1) * (q - 1)
+		self.exponent = self.getExponent()
+		self.d = mod_inverse(self.exponent, self.totient)
+
+		return RSAKey(
+			length = self.keyLength,
+			public = self.n,
+			exponent = self.exponent,
+			private = self.d
+		)
+		
+	def generatePQ(self) -> Tuple[int, int]:
+		p = self.getRandomPrime()
+		cond = True
+		while cond:
+			q = self.getRandomPrime()
+			cond = (p == q)
+		return p, q
+
+	def getExponent(self) -> int:
+		for e in range(2**16 + 1, self.totient):
+			if math.gcd(e, self.totient) == 1:
+				return e
+		raise ValueError("Can't find exponent")
+				
+	def getRandomPrime(self) -> int:
+		min_ = 2 ** ((self.keyLength/2) - 1)
+		max_ = (2 ** (self.keyLength/2)) - 1
+		return randprime(min_, max_)
+
+
 class RSA:
-        def __init__ (self,p,q,n,e): # w przypadku inicjalizacji po stronie publicznej p=q=0
-                self.n = n;
-                self.e = e;
-                self.p = p;
-                self.q = q;
-                
-        def gcd(self,b, a):
-                r = b % a;
-                if r == 0:
-                        return a;
-                else:
-                        return self.gcd(a ,r);
+	def __init__(self, key : RSAKey):
+		self.key = key
+		
+	def encrypt(self, msg : bytes) -> bytes:
+		pass
 
-        def gcd_extended(self,a,b):
-                x = 1; y = 0;
-                x1 = 0; y1 = 1; a1 = a; b1 = b;     
-                while b1 != 0:
-                        q = math.floor(a1/b1);        
-                        x, x1 = x1, x - q * x1;
-                        y, y1 = y1, y - q * y1;
-                        a1, b1 = b1, a1 - q * b1;
-                return  x;
-                
-        def RSA_encode (m,n,e):
-                return ((m**self.e)%self.n);
-
-        def RSA_decode (m):
-                return (c**self.d)%self.n;
-
-        def totient_function(self, p ,q): # Only for primes
-                return int((p-1)*(q-1)/self.gcd(p-1,q-1));
-        
-        def generateKeys(self):
-                print("Publick keys n=",str(self.n), " e= ", str(self.e));
-                if self.p != 0:
-                        totient = self.totient_function(self.p ,self.q);
-                        self.private = self.gcd_extended(self.e,totient);
-                        print("Private key d=", str(self.private));
-
-
-
-p = 61; q = 53;
-serwer = RSA(p,q,p*q,37);
-serwer.generateKeys();
-
-#private = generateRSA_Keys(61,53,37);
-
-
+	def decrypt(self, msg : bytes) -> bytes:
+		pass
 
