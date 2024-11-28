@@ -10,9 +10,10 @@ class RSAKey:
 	public		: int
 	exponent	: int
 	private		: int
+	modulus         : int
 
 class RSAKeyGenerator:
-	def __init__(self, keyLength = 2048):
+	def __init__(self, keyLength = 1024):
 		self.keyLength = keyLength
 
 	def generateKeys(self) -> RSAKey:
@@ -26,7 +27,8 @@ class RSAKeyGenerator:
 			length = self.keyLength,
 			public = self.n,
 			exponent = self.exponent,
-			private = self.d
+			private = self.d,
+                        modulus = self.n
 		)
 		
 	def generatePQ(self) -> Tuple[int, int]:
@@ -42,6 +44,7 @@ class RSAKeyGenerator:
 			if math.gcd(e, self.totient) == 1:
 				return e
 		raise ValueError("Can't find exponent")
+
 				
 	def getRandomPrime(self) -> int:
 		min_ = 2 ** ((self.keyLength/2) - 1)
@@ -54,8 +57,9 @@ class RSA:
 		self.key = key
 		
 	def encrypt(self, msg : bytes) -> bytes:
-		pass
+		return  (pow(int.from_bytes(msg),self.key.exponent,self.key.modulus)).to_bytes(math.ceil(self.key.length/8));
 
 	def decrypt(self, msg : bytes) -> bytes:
-		pass
+                return  (pow(int.from_bytes(msg),self.key.private,self.key.modulus)).to_bytes(math.ceil(self.key.length/8));
+		
 
