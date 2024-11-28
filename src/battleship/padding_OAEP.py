@@ -3,7 +3,7 @@ import random
 from datetime import datetime
 
 class OAEP:
-        def __init__(self, messageLength, modulusLength = 1024, hash_func=hashlib.sha256):
+        def __init__(self, messageLength, modulusLength = 128, hash_func=hashlib.sha256):
             self.modulusLength = modulusLength;
             self.hash_func = hash_func;
             self. messageLength = messageLength;

@@ -56,10 +56,10 @@ class RSA:
 	def __init__(self, key : RSAKey):
 		self.key = key
 		
-	def encrypt(self, msg : bytes) -> bytes:
-		return  (pow(int.from_bytes(msg),self.key.exponent,self.key.modulus)).to_bytes(math.ceil(self.key.length/8));
+	def encrypt(self, msg : bytes, exponent) -> bytes:
+		return  (pow(int.from_bytes(msg),exponent,self.key.modulus)).to_bytes(math.ceil(self.key.length/8));
 
-	def decrypt(self, msg : bytes) -> bytes:
-                return  (pow(int.from_bytes(msg),self.key.private,self.key.modulus)).to_bytes(math.ceil(self.key.length/8));
+	def decrypt(self, msg : bytes, private) -> bytes:
+                return  (pow(int.from_bytes(msg),private,self.key.modulus)).to_bytes(math.ceil(self.key.length/8));
 		
 
