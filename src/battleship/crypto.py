@@ -12,12 +12,12 @@ class cryptographic:
             #Padding
             self.padding = OAEP.OAEP( messageLength,modulusLength,hash_func)
             
-        def encrypt (self, msg : bytes, exponent ) -> bytes:
+        def encrypt (self, msg : bytes ) -> bytes:
             paddedMessage = self.padding.padding_OAEP( self.padding.random_seed(32) , msg);
-            return self.RSA.encrypt(paddedMessage, exponent);
+            return self.RSA.encrypt(paddedMessage);
             
-        def decrypt (self, cipher : bytes, private ) -> bytes:
-            decryptedMessage = self.RSA.decrypt(cipher,private);
+        def decrypt (self, cipher : bytes ) -> bytes:
+            decryptedMessage = self.RSA.decrypt(cipher);
             return self.padding.encode_OAEP(decryptedMessage);
             
 
