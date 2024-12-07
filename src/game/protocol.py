@@ -1,9 +1,9 @@
-import battleship.battleship_pb2 as pb
-from .types		import BoardPoint
+import game.game_pb2 as pb
+from .circleCross	import BoardPoint
 from dataclasses	import dataclass
 
-GameEnd	= 'game-end'
 Update	= 'update'
+ok	= 'ok'
 
 class Register(str):
 	pass
@@ -15,14 +15,11 @@ class Protocol:
 
 	def makeHit(self, bp : BoardPoint):
 		h = pb.Hit()
-		h.row = bp.y
-		h.col = bp.x
+		h.y = bp.y
+		h.x = bp.x
 		return h
 	def makeBoardPoint(self, h : pb.Hit):
-		return BoardPoint(
-			x = h.col,
-			y = h.row
-		)
+		return BoardPoint(x = h.x, y = h.y)
 
 	def setToken(self, token):
 		self.token = token
@@ -68,14 +65,12 @@ class Protocol:
 		r.ParseFromString(s)
 		if r.type == pb.RsType.RS_HIT:
 			return BoardPoint(
-				x = r.hit.col,
-				y = r.hit.row
+				x = r.hit.x,
+				y = r.hit.y
 			)
-		elif r.type == pb.RsType.RS_LAST_HIT_UPDATE:
-			return r.miss
-		elif r.type == RS_GAME_END:
-			return GameEnd
-		elif r.type == RS_INVALID_VALUE:
+		elif r.type == pb.RsType.RS_OK:
+			return Ok
+		elif r.type == pb.RsType.RS_INVALID_VALUE:
 			return None
 		else:
 			raise InvalidProtocol()

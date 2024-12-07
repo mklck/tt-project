@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package battleship;
+package game;
 
 enum RqType {
 	RQ_REGISTER	= 0;
@@ -10,14 +10,13 @@ enum RqType {
 
 enum RsType {
 	RS_HIT			= 0;
-	RS_LAST_HIT_UPDATE	= 1;
-	RS_GAME_END		= 2;
+	RS_OK			= 1;
 	RS_INVALID_VALUE	= 3;
 }
 
 message Hit {
-	int32 row = 1;
-	int32 col = 2;
+	int32 x = 1;
+	int32 y = 2;
 }
 
 message Request {
@@ -35,7 +34,7 @@ message Response {
 	RsType type = 2;
 
 	oneof res {
-		bool	miss = 3;
-		Hit	hit = 4;
+		bool	youWon	= 3;
+		Hit	hit	= 4;
 	}
 }

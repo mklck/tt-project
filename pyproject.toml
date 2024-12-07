@@ -5,15 +5,15 @@ build-backend = "setuptools.build_meta"
 [project]
 requires-python = ">= 3.12"
 version = "0.1.0"
-name = "battleship"
-dependencies = ["sympy"]
+name = "game"
+dependencies = ["sympy", "protobuf", "pygame"]
 
 [project.scripts]
-battleshipd = "battleship:server"
-battleship = "battleship:client"
+gamed = "game:server"
+game = "game:Gui.main"
 
 [project.optional-dependencies]
-dev = ["pytest", "mypy", "protobuf"]
+dev = ["pytest", "mypy"]
 
 [tool.mypy]
 files = "src"

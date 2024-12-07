@@ -1,4 +1,4 @@
-from battleship import RSAKey, RSAKeyGenerator, RSA
+from game import RSAKey, RSAKeyGenerator, RSA
 
 import pytest
 
