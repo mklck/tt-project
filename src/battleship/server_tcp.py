@@ -31,7 +31,7 @@ class SerwerTCP:
                 except:
                     print("Brak polaczenia");
                     conn.close();
-                    lock.released();
+                    lock.release();
                     return;
 
         def send(self, conn, lock):
@@ -45,7 +45,7 @@ class SerwerTCP:
                 except:
                     print("Brak polaczenia");
                     conn.close();
-                    lock.released();
+                    lock.release();
                     return;
                     #self.bind_serwer();            
 
@@ -57,7 +57,7 @@ class SerwerTCP:
         def connection(self, conn,BUFFER_SIZE = 20000):
                 conn_state = Color.PUBLIC_KEY_EXCHANGE_SERVER;
                 #conn, addr = self.s.accept()
-                #print('Connection address:', addr)
+                
                 
                 while 1:
                     match conn_state:

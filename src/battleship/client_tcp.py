@@ -15,35 +15,41 @@ class ClientTCP:
             self.crypto_client = crypto.cryptographic(32);
             self.conn = None
 
-        def receive(self, lock):
+        def receive(self, lock, token):
                 while True:
-                    try:
-                        data = self.s.recv(128);
-                        print("Zaszyfrowana Wiadomosc: ");
-                        print(data);
-                        decrypted = self.crypto_client.decrypt(data);
-                        print("Odszyfrowana Wiadomosc: " + decrypted.decode());
-                    except:
-                        print("Brak polaczenia");
-                        conn.close();
-                        lock.released();
-                        return;
+                        try:
+                                data = self.s.recv(128);
+                                
+                                decrypted = self.crypto_client.decrypt(data);
+                                print("Odebrane: " + decrypted.decode());
+
+                                token = 1;
+                        except:
+                                print("Brak polaczenia");
+                                self.s.close();
+                                lock.released();
+                                return;
                 
 
-        def send(self, lock):
+        def send(self, lock, token):
                  while True:
-                    msg = input('Wpisz wiadomosc: ');
-                    data = msg.encode();
-                    
-                    data_encrypted = self.crypto_client.encrypt( msg.encode() );
-                    
-                    try:
-                        self.s.send( data_encrypted );
-                    except:
-                        print("Brak polaczenia");
-                        conn.close();
-                        lock.released();
-                        return;
+                        if token == 1:     
+                                msg = input('Wpisz wiadomosc: ');
+                                data = msg.encode();
+
+                                data_encrypted = self.crypto_client.encrypt( msg.encode() );
+
+                                try:
+                                        self.s.send( data_encrypted );
+                                        token = 0;
+                                except:
+                                        print("Brak polaczenia");
+                                        self.s.close();
+                                        lock.released();
+                                return;
+                        else:
+                                print("Oczekiwanie na ruch gracz (...) ");
+                                time.sleep(0.5);
 
         def exit(self):
             self.s.close();        

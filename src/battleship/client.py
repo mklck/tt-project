@@ -15,11 +15,13 @@ if __name__== "__main__":
     print_thread = threading.Lock();
     read_thread = threading.Lock();
 
+    token = 0;
     while 1:
+        
         print_thread.acquire();
-        start_new_thread(client.send, (print_thread,))
+        start_new_thread(client.send, (print_thread, token))
         
         read_thread.acquire();
-        start_new_thread(client.receive, (read_thread,))
+        start_new_thread(client.receive, (read_thread, token))
         
         #client.receive();

@@ -19,6 +19,7 @@ if __name__== "__main__":
     while 1:
         conn, addr = server.s.accept()
         server.connection(conn);
+        print('Connection address:', addr)
         
         print_thread.acquire();
         start_new_thread(server.send, (conn,print_thread))
