@@ -11,6 +11,8 @@ class RSAKey:
 	exponent	: int
 	private		: int
 	modulus         : int
+	exponent_sym	: int		
+	modulus_sym     : int
 
 class RSAKeyGenerator:
 	def __init__(self, keyLength = 1024):
@@ -28,7 +30,9 @@ class RSAKeyGenerator:
 			public = self.n,
 			exponent = self.exponent,
 			private = self.d,
-                        modulus = self.n
+                        modulus = self.n,
+                        exponent_sym = 0,		
+                        modulus_sym = 0
 		)
 		
 	def generatePQ(self) -> Tuple[int, int]:
@@ -57,7 +61,7 @@ class RSA:
 		self.key = key
 		
 	def encrypt(self, msg : bytes) -> bytes:
-		return  (pow(int.from_bytes(msg),self.key.exponent,self.key.modulus)).to_bytes(math.ceil(self.key.length/8));
+		return  (pow(int.from_bytes(msg),self.key.exponent_sym,self.key.modulus_sym)).to_bytes(math.ceil(self.key.length/8));
 
 	def decrypt(self, msg : bytes) -> bytes:
                 return  (pow(int.from_bytes(msg),self.key.private,self.key.modulus)).to_bytes(math.ceil(self.key.length/8));
