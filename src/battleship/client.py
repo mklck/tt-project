@@ -3,6 +3,8 @@ import time
 import crypto
 from enum import Enum
 from dataclasses	import dataclass
+from _thread import *
+import threading
 import client_tcp
 
 
@@ -10,5 +12,14 @@ if __name__== "__main__":
     client = client_tcp.ClientTCP();
     client.connect_serwer();
 
+    print_thread = threading.Lock();
+    read_thread = threading.Lock();
+
     while 1:
-        client.receive();
+        print_thread.acquire();
+        start_new_thread(client.send, (print_thread,))
+        
+        read_thread.acquire();
+        start_new_thread(client.receive, (read_thread,))
+        
+        #client.receive();

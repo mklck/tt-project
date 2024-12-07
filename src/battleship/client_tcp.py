@@ -4,12 +4,6 @@ import crypto
 from enum import Enum
 from dataclasses	import dataclass
 
-## Maszyna stanów
-##class Color(Enum):
-##    PUBLIC_KEY_EXCHANGE = 1
-##    PUBLIC_KEY_ACK = 2
-##    COMMUNICATION = 3
-
 Color = Enum('Color', [('PUBLIC_KEY_EXCHANGE_SERVER', 1), ('CLIENT_KEY_ACK', 2), ('PUBLIC_KEY_EXCHANGE_CLIENT', 3), ('SERVER_KEY_ACK', 4), ('COMMUNICATION', 5) , ('END_CONN', 6)] )
 conn_state = Color.PUBLIC_KEY_EXCHANGE_SERVER;
 
@@ -21,29 +15,35 @@ class ClientTCP:
             self.crypto_client = crypto.cryptographic(32);
             self.conn = None
 
-        def receive(self):
-            try:
-                data = self.s.recv(128);
-                print("Zaszyfrowana Wiadomosc: ");
-                print(data);
-                decrypted = self.crypto_client.decrypt(data);
-                print("Odszyfrowana Wiadomosc: " + decrypted.decode());
-            except:
-                print("Brak polaczenia");
-                self.s.close();
-                self.connect_serwer();
+        def receive(self, lock):
+                while True:
+                    try:
+                        data = self.s.recv(128);
+                        print("Zaszyfrowana Wiadomosc: ");
+                        print(data);
+                        decrypted = self.crypto_client.decrypt(data);
+                        print("Odszyfrowana Wiadomosc: " + decrypted.decode());
+                    except:
+                        print("Brak polaczenia");
+                        conn.close();
+                        lock.released();
+                        return;
                 
 
-        def send(self):
-            msg = input('Wpisz wiadomosc: ');
-            data = msg.encode();
-            
-            data_encrypted = self.crypto_client.encrypt( msg.encode() );
-            
-            try:
-                self.s.send( data_encrypted );
-            except:
-                print("Brak polaczenia");
+        def send(self, lock):
+                 while True:
+                    msg = input('Wpisz wiadomosc: ');
+                    data = msg.encode();
+                    
+                    data_encrypted = self.crypto_client.encrypt( msg.encode() );
+                    
+                    try:
+                        self.s.send( data_encrypted );
+                    except:
+                        print("Brak polaczenia");
+                        conn.close();
+                        lock.released();
+                        return;
 
         def exit(self):
             self.s.close();        
