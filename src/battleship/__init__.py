@@ -10,3 +10,6 @@ from .types import (
 
 from .exceptions import *
 from .RSA import RSAKey, RSAKeyGenerator
+
+from .protocol import Protocol
+import battleship.battleship_pb2 as pb

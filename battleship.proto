@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package battleship;
+
+enum RqType {
+	RQ_REGISTER	= 0;
+	RQ_UPDATE	= 1;
+	RQ_HIT		= 2;
+}
+
+enum RsType {
+	RS_HIT			= 0;
+	RS_LAST_HIT_UPDATE	= 1;
+	RS_GAME_END		= 2;
+	RS_INVALID_VALUE	= 3;
+}
+
+message Hit {
+	int32 row = 1;
+	int32 col = 2;
+}
+
+message Request {
+	int32 token = 1;
+	RqType type = 2;
+
+	oneof req {
+		string name = 3;
+		Hit hit = 4;
+	}
+}
+
+message Response {
+	int32 token = 1;
+	RsType type = 2;
+
+	oneof res {
+		bool	miss = 3;
+		Hit	hit = 4;
+	}
+}

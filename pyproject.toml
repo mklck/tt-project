@@ -9,11 +9,11 @@ name = "battleship"
 dependencies = ["sympy"]
 
 [project.scripts]
-battleshipd = "server:main"
-battleship = "client:main"
+battleshipd = "battleship:server"
+battleship = "battleship:client"
 
 [project.optional-dependencies]
-dev = ["pytest", "mypy"]
+dev = ["pytest", "mypy", "protobuf"]
 
 [tool.mypy]
 files = "src"
