@@ -15,38 +15,49 @@ class ClientTCP:
             self.crypto_client = crypto.cryptographic(32);
             self.conn = None
 
-        def receive(self, lock, token):
+        def receive(self, lock, event, board):
                 while True:
                         try:
                                 data = self.s.recv(128);
                                 
                                 decrypted = self.crypto_client.decrypt(data);
-                                print("Odebrane: " + decrypted.decode());
+                                received_board = list(decrypted)[-9:];
+                                print("Odebrana plansza: " , received_board );
 
-                                token = 1;
+                                event.set();
+                                board.put(received_board);
                         except:
                                 print("Brak polaczenia");
                                 self.s.close();
-                                lock.released();
+                                lock.release();
                                 return;
                 
 
-        def send(self, lock, token):
+        def send(self, lock, event, queue):
                  while True:
-                        if token == 1:     
-                                msg = input('Wpisz wiadomosc: ');
-                                data = msg.encode();
+                        if event.is_set():
+                                input_list = input('Enter elements of a list separated by space \n')
+                                board = input_list.split()
 
-                                data_encrypted = self.crypto_client.encrypt( msg.encode() );
+                                # convert each item to int type
+                                for i in range(len(board)):
+                                        board[i] = int(board[i])
+                                        
+                                queue.get(); # just for remove
+                                queue.put(board);
+                                print("Wysłana plansza: ", *board );
+                                data = bytes(board);
+
+                                data_encrypted = self.crypto_client.encrypt( data );
 
                                 try:
                                         self.s.send( data_encrypted );
-                                        token = 0;
+                                        event.clear();
                                 except:
                                         print("Brak polaczenia");
                                         self.s.close();
-                                        lock.released();
-                                return;
+                                        lock.release();
+                                        return;
                         else:
                                 print("Oczekiwanie na ruch gracz (...) ");
                                 time.sleep(0.5);
