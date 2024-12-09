@@ -1,0 +1,46 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{xcolor}
+\usepackage{polski}
+\usepackage{multicol}
+\usepackage[hmargin=1cm]{geometry}
+
+\title{Projekt Telekomunikacja}
+\author{Jakub Zając, Marcin Klocek}
+\date{December 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Opis projektu}
+W ramach projektu została opracowana gra Kółko i Krzyżyk. W grze może wziąć udział dwóch graczy spośród których jeden jest serwerem, drugi klientem. Po nawiązaniu połączenia, następuje przekazanie kluczy publiczbych przez obie strony co zapewnia symetryczne szyfrowanie (TLS RSA). Następuje rozgrywka. Dane wymieniane są za pomocą protokołu TCP/IP. Użyty język programowania: \textbf{Python 3} wraz z systemem wersjonowania \textit{git}.
+
+\section{RSA/Padding OAEP \color{red} Autor: Jakub Zając }
+\subsection{RSA}
+Do szyfrowania użyty został protokół RSA z kluczem 1024-bitowy. Zgodnie ze specyfikacją algorymtu szyfrowanie zostaje przeprowadzane poprzez mnożenie modularne: \newline
+
+\begin{multicols}{2}
+\begin{center}
+\Large Szyfrowanie \newline
+\Large $ c~=~m^e~\mathrm{mod} ~ n$
+\end{center}
+\vfill
+
+\begin{center}
+\Large Deszyfrowanie \newline
+\Large $ m~=~c^d~\mathrm{mod} ~ n$
+\end{center}
+\vfill
+\end{multicols}
+Gdzie \textit{c}= wiadomość zaszyfrowana w postaci liczby całkowitej z zakresu  1 $\cdots$ \textit{n}, gdzie n to liczba większa od $2^{1023-1}$, \textit{e} - klucz publiczny oraz \textit{d} klucz prywatny. Program za każdym razem losuje dwie liczby pierwsze wystarczająco duże by ich iloczyn dał w wyniku liczbe \textit{n}.
+
+%\begin{figure}
+%\centerline{\includegraphics[scale=0.9]{Szyfrowanie}}
+%\caption{Proces Szyfrowania}
+%\end{figure}
+
+
+\section{Komunikacja SerwerClient \color{red} Autor: Jakub Zając }
+
+\end{document}

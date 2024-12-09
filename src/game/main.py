@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import socket
 import time
 import crypto
@@ -38,4 +39,9 @@ if __name__== "__main__":
         
         
         
+=======
+from .game import Game
+>>>>>>> 851b831185f6c1ad7b8f5466f4c7a9c940071e63
 
+def main():
+	Game().run()

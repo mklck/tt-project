@@ -17,18 +17,6 @@ class Gui:
 		self.font = pg.font.SysFont('Arial', 48)
 		self.game = CircleCross()
 		
-	@classmethod
-	def main(cls):
-		self = cls(Point(800, 800))
-		self.loop()
-		
-	def loop(self):
-		while True:
-			try:
-				self.tick()
-			except GameQuit:
-				exit()
-				
 	def tick(self):
 		for e in pg.event.get():
 			if e.type == pg.QUIT:
