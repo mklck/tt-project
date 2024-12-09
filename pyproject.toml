@@ -10,7 +10,7 @@ dependencies = ["sympy", "protobuf", "pygame"]
 
 [project.scripts]
 gamed = "game:server"
-game = "game:Gui.main"
+game = "game:main"
 
 [project.optional-dependencies]
 dev = ["pytest", "mypy"]

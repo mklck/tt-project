@@ -1,5 +1,5 @@
-from RSA import RSAKeyGenerator, RSA
-import padding_OAEP as OAEP
+from .RSA import RSAKeyGenerator, RSA
+import game.padding_OAEP as OAEP
 import random, hashlib
 
 class cryptographic:
