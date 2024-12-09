@@ -4,7 +4,7 @@
 \usepackage{polski}
 \usepackage{multicol}
 \usepackage{url}
-\usepackage[hmargin=1cm]{geometry}
+\usepackage[hmargin=1cm,vmargin=2cm]{geometry}
 
 \title{Projekt Telekomunikacja}
 \author{Jakub Zając, Marcin Klocek}
@@ -41,14 +41,18 @@ Gdzie \textit{c}= wiadomość zaszyfrowana w postaci liczby całkowitej z zakres
 Aby zapewnić danym odpowiednią długość (przy zbyt małej długości bitowej danych szyfr może zostać łatwo złamany) stisujemy \textit{Optimal asymmetric encryption padding}, który odpowiednio wydłuży dane. Algorymt ten wykorzystuje hashowanie \textbf{SHA-256}  oraz funkcje \textbf{mgf1}. Dodatkowo każdorazowo przy padding'owniu losowany jest nowy \textit{seed} używany podczas tego procesu. W naszym projekcie użyłem gotowych bibliotecznych funkcji hashujących oraz gotowej implmentacji funkcji \textbf{mgf1}.
 
 \begin{figure}
-\centerline{\includegraphics[scale=0.2]{OAEP.png}}
+\centerline{\includegraphics[scale=0.15]{OAEP.png}}
 \caption{Optimal asymmetric encryption padding}
 \end{figure}
 Całkowita długość ramki to 128 bajtów, funkcja hashująca koduje pusty label = '' do porcji 32 bajtowej, \textit{seed} również ma 32 bajty, resza to wiadomość oraz uzupełnienia tak jak to widać na rysunku. Wynikowo dane mają 1024 znaki bitowe. Operacja z krzyżykiem w kole to bitowe XOR.
 
-
 \section{Komunikacja SerwerClient \color{red} Autorzy: Jakub Zając, ... }
 Komunikacja nawiązywana jest poprzez gniazdo (\textit{socket}) za pomocą protokołu IP. Po nawiązaniu połączenia serwer-client, następuje podwójna wymiana kluczy. Zarówno klient jak i serwer ma swoją parę kluczy publicznych \textit{(d,e)} którą wymienia między sobą w przestrzeni publicznej , dzięki czemu szyfrowanie działa w obie strony.  
+
+\begin{figure}
+\centerline{\includegraphics[scale=0.6]{Raport/ProceszSzyfrowania.png}}
+\caption{Szyfrowanie Serwer-Klient. W drugą stronę przebiega identycznie.}
+\end{figure}
 
 Nawiązanie połączenia następuje w 4 stanach: 
 \begin{enumerate}
@@ -56,6 +60,9 @@ Nawiązanie połączenia następuje w 4 stanach:
 \item \textbf{COMMUNICATION} - rozpoczęcie właściwej komunikacji.
 \end{enumerate}
 W projekcie używany jest \textbf{socket.socket(socket.AF\_INET, socket.SOCK\_STREAM)} udostępniany w standardowej bibliotece. Jest to protokół TCP/IPv4.
+
+
+
 
 
 
