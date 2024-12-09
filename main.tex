@@ -33,14 +33,25 @@ Do szyfrowania użyty został protokół RSA z kluczem 1024-bitowy. Zgodnie ze s
 \end{center}
 \vfill
 \end{multicols}
-Gdzie \textit{c}= wiadomość zaszyfrowana w postaci liczby całkowitej z zakresu  1 $\cdots$ \textit{n}, gdzie n to liczba większa od $2^{1023-1}$, \textit{e} - klucz publiczny oraz \textit{d} klucz prywatny. Program za każdym razem losuje dwie liczby pierwsze wystarczająco duże by ich iloczyn dał w wyniku liczbe \textit{n}.
+Gdzie \textit{c}= wiadomość zaszyfrowana w postaci liczby całkowitej z zakresu  1 $\cdots$ \textit{n}, gdzie n to liczba większa od $2^{1023-1}$, \textit{e} - klucz publiczny oraz \textit{d} klucz prywatny. Program za każdym razem losuje dwie liczby pierwsze wystarczająco duże by ich iloczyn dał w wyniku liczbe \textit{n}. Trudność złamania szyfry polega na trudności faktoryzacji \textit{n}.
 
-%\begin{figure}
-%\centerline{\includegraphics[scale=0.9]{Szyfrowanie}}
-%\caption{Proces Szyfrowania}
-%\end{figure}
+\newpage
+\subsection{Padding}
+Aby zapewnić danym odpowiednią długość (przy zbyt małej długości bitowej danych szyfr może zostać łatwo złamany) stisujemy \textit{Optimal asymmetric encryption padding}, który odpowiednio wydłuży dane. Algorymt ten wykorzystuje hashowanie \textbf{SHA-256}  oraz funkcje \textbf{mgf1}. Dodatkowo każdorazowo przy padding'owniu losowany jest nowy \textit{seed} używany podczas tego procesu. W naszym projekcie użyłem gotowych bibliotecznych funkcji hashujących oraz gotowej implmentacji funkcji \textbf{mgf1}.
+
+\begin{figure}
+\centerline{\includegraphics[scale=0.2]{OAEP.png}}
+\caption{Optimal asymmetric encryption padding}
+\end{figure}
+Całkowita długość ramki to 128 bajtów, funkcja hashująca koduje pusty label = '' do porcji 32 bajtowej, \textit{seed} również ma 32 bajty, resza to wiadomość oraz uzupełnienia tak jak to widać na rysunku. Wynikowo dane mają 1024 znaki bitowe. Operacja z krzyżykiem w kole to bitowe XOR.
 
 
 \section{Komunikacja SerwerClient \color{red} Autor: Jakub Zając }
+
+\begin{figure}
+\centerline{\includegraphics[scale=0.6]{KeyExchange.png}}
+\caption{Optimal asymmetric encryption padding}
+\end{figure}
+
 
 \end{document}
