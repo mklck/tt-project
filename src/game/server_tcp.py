@@ -35,8 +35,8 @@ class SerwerTCP:
                 except:
                     print("Brak polaczenia");
                     conn.close();
-                    lock.release();
                     event.set();
+                    lock.release();
                     return;
 
         def send(self, conn, lock,event, queue):
@@ -73,6 +73,7 @@ class SerwerTCP:
                 self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
                 self.s.bind((TCP_IP, TCP_PORT));
                 self.s.listen(1);
+
                 
         def connection(self, conn, event, BUFFER_SIZE = 20000):
                 conn_state = Color.PUBLIC_KEY_EXCHANGE_SERVER;
@@ -118,4 +119,4 @@ class SerwerTCP:
     
 
 
-
+        

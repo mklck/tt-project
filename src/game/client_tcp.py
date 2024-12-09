@@ -13,7 +13,7 @@ class ClientTCP:
         def __init__(self):
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
             self.crypto_client = crypto.cryptographic(32);
-            self.conn = None
+            self.conn = 0;
 
         def receive(self, lock, event, board):
                 while True:
@@ -30,6 +30,7 @@ class ClientTCP:
                                 print("Brak polaczenia");
                                 self.s.close();
                                 lock.release();
+                                self.conn = 0;
                                 return;
                 
 
@@ -57,6 +58,7 @@ class ClientTCP:
                                         print("Brak polaczenia");
                                         self.s.close();
                                         lock.release();
+                                        self.conn = 0;
                                         return;
                         else:
                                 print("Oczekiwanie na ruch gracz (...) ");
@@ -107,6 +109,7 @@ class ClientTCP:
                          
                          if data.decode()[0:7] == "KEY_ACK":
                             print("ACK Got")
+                            self.conn = 1;
                             return
 
 
