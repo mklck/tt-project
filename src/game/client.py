@@ -1,40 +1,20 @@
-import socket
+from clientTCP import ClientTCP 
 import time
-import crypto
-from enum import Enum
-from dataclasses	import dataclass
-from _thread import *
-import threading
-import queue as q
-import client_tcp
 
 
 if __name__== "__main__":
-    client = client_tcp.ClientTCP();
-    
+    client = ClientTCP();
+    client.connectServer();
+
     while 1:
-        if(client.conn == 0):
-            client.connect_serwer();
-
-            print_thread = threading.Lock();
-            read_thread = threading.Lock();
-
-            ### event blokuje/odblokowywuje ruch; send czysci, receive ustawia
-            event = threading.Event();
-            event.clear();
+        if(client.turn == 0):
+            client.clientRead();
+        
+        if(client.turn == 1 ): ## and... tu mozesz dodaj jakas swoja flage ktora zapalasz eventem w GUI...## 
+            send_data = input("Podaj wiadomosc:");
+            client.clientSend(send_data.encode());
             
-            ### wspoldzielone dane miedzy watkami 
-            board = q.Queue();
-            ### czysta plansza 
-            board.put([0,0,0,0,0,0,0,0,0])
 
-            ### watek do wysylania
-            print_thread.acquire();
-            start_new_thread(client.send, (print_thread, event, board))
-
-            ### watek do czytania
-            read_thread.acquire();
-            start_new_thread(client.receive, (read_thread, event, board))
-        else:
-            pass
-
+        ### twoje GUI....
+        
+        time.sleep(0.1);        

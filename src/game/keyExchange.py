@@ -21,8 +21,9 @@ class keyExchange:
 
 	def __init__(self, crypto):
 		self.crypto = crypto
+		self.BUFFER_SIZE = 20000;
 
-	def keyTransmission(self, conn):
+	def keyTransmissionServer(self, conn):
 		conn_state = Color.PUBLIC_KEY_EXCHANGE_SERVER
 
 		while 1:
@@ -57,3 +58,41 @@ class keyExchange:
                                         self.crypto.RSA.key.modulus_sym = int(public_pair[1]);
                                         conn.send("KEY_ACK".encode());
                                         return conn
+
+	def keyTransmissionClient(self, conn):
+		conn_state = Color.PUBLIC_KEY_EXCHANGE_SERVER
+
+		while 1:
+			match conn_state:
+				case Color.PUBLIC_KEY_EXCHANGE_SERVER:
+					data = conn.recv(self.BUFFER_SIZE);
+					if data.decode()[0:10] != "PUBLIC_KEY":
+						continue
+                            
+					public_pair = data.decode()[10:].split();
+					print("PUBLICE KEY GOT:", int(public_pair[0]) )
+					self.crypto.RSA.key.exponent_sym = int(public_pair[0]);
+					self.crypto.RSA.key.modulus_sym = int(public_pair[1]);
+					conn.send("KEY_ACK".encode());
+					conn_state = Color.PUBLIC_KEY_EXCHANGE_CLIENT;
+
+				case Color.PUBLIC_KEY_EXCHANGE_CLIENT:
+					print("Sending public key [integer]: {} and modulus {}".format(
+							self.crypto.RSA.key.exponent,
+							self.crypto.RSA.key.modulus
+						)
+					)
+					conn.send(
+						"PUBLIC_KEY".encode()
+						+ (str(self.crypto.RSA.key.exponent)).encode()
+						+ (" ").encode()
+						+ (str(self.crypto.RSA.key.modulus)).encode()
+					)
+					conn_state = Color.SERVER_KEY_ACK;
+                        
+				case Color.SERVER_KEY_ACK:
+					print("Waiting for publick key ACK from serwer")
+					data = conn.recv(self.BUFFER_SIZE);
+					if data.decode()[0:7] == "KEY_ACK":
+						print("ACK Got")
+						return
