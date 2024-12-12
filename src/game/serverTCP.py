@@ -1,7 +1,7 @@
 import socket
 
-import keyExchange as ex
-import crypto
+from .keyExchange import keyExchange as ex
+from .crypto import cryptographic
 import random
 import select
 import sys
@@ -14,16 +14,17 @@ class ServerTCP:
     BUFFER_SIZE = 20000
 	
     def __init__(self):
-        self.crypto = crypto.cryptographic(32)
-        self.keyEx = ex.keyExchange(crypto);
+        self.crypto = cryptographic(32)
+        self.keyEx = ex(self.crypto);
 
     def bindServer(self, TCP_IP = '127.0.0.1', TCP_PORT = 5005):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(('127.0.0.1', 5005))
         self.server.listen(5)
-
+        self.server.setblocking(0)
+        
         self.inputs = [ self.server ]
-        self.turn = 0;
+        self.turn = -1;
 
     def randomizeOrder(self, s):
         if random.randint(0, 1) == 1:
@@ -38,7 +39,7 @@ class ServerTCP:
 
     def runServer(self):
         # Wait for at least one of the sockets to be ready for processing
-            readable, _, exceptional = select.select(self.inputs, [], self.inputs)
+            readable, _, exceptional = select.select(self.inputs, [], self.inputs, 0)
 
             for s in readable:
 

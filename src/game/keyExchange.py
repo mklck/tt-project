@@ -1,5 +1,5 @@
 import socket
-import crypto
+from .crypto import cryptographic
 import select
 
 from enum	import Enum
