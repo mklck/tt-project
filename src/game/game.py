@@ -13,15 +13,24 @@ class Game:
                         if self.tcp.connectServer() == 1:
                                 break;
                         self.tick(self.tcp.turn);
+                        
+                while  self.tcp.sign == None:
+                        self.tcp.clientRead();
+                        self.tick(self.tcp.turn);
 
+                    
+                print("Gui ustawione");   
+                self.gui.setSign(self.tcp.sign);
+                
                 while True:
                         
                         if self.tcp.turn == 0 or self.tcp.turn == -1:
                                 self.tcp.clientRead();
                                 
-                        if self.tcp.turn == 1:
+                        if self.tcp.turn == 1 and  self.gui.game.move_done == 1:
                                 send_data = 'Cos do wyslania'
-                                #self.tcp.clientSend(send_data.encode());
+                                self.tcp.clientSend(send_data.encode());
+                                self.gui.game.move_done = 0;
                                
                         self.tick(self.tcp.turn);
                         

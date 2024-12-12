@@ -7,7 +7,7 @@ class GameQuit(Exception):
 	pass
 
 class Gui:
-	def __init__(self, res : Point):
+	def __init__(self, res : Point ):
 		pg.init()
 		self.res = res
 		self.screen = pg.display.set_mode((res.x, res.y))
@@ -15,21 +15,24 @@ class Gui:
 		self.fill = 'black'
 		self.thickness = 5
 		self.font = pg.font.SysFont('Arial', 48)
-		self.game = CircleCross()
+		self.game = None;
+
+	def setSign(self, sign):
+                self.game = CircleCross(sign);
 		
 	def tick(self, turn):
 		for e in pg.event.get():
 			if e.type == pg.QUIT:
 				raise GameQuit()
-			if e.type == pg.MOUSEBUTTONUP:
-				self.handleMouse(*e.pos)
+			if e.type == pg.MOUSEBUTTONUP and turn == 1:
+				self.handleMouse(*e.pos,turn)
 		self.screen.fill("white")
 		self.drawBoard(turn)
 
 		pg.display.flip()
 		self.clock.tick(30)
 
-	def handleMouse(self, x, y):
+	def handleMouse(self, x, y, turn):
 		r = range(100, 701)
 		if x not in r or y not in r:
 			return
@@ -37,7 +40,7 @@ class Gui:
 		y = (y - 100) // 200
 		bp = BoardPoint(x=x, y=y)
 		try:
-			self.game.hit(bp)
+			self.game.hit(bp, turn)
 		except FieldNotEmpty:
 			pass
 
@@ -51,7 +54,8 @@ class Gui:
 
 	def drawBoard(self, turn):
 		self.drawRect(Point(100, 100), Point(600, 600))
-		self.drawFields()
+		if self.game:
+                    self.drawFields()
 		self.drawStatus(turn)
 
 	def drawFields(self):

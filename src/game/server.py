@@ -9,19 +9,25 @@ class Server:
                 self.s = ServerTCP()
                 self.s.bindServer()
 	def run(self):
-                
                 while True:
-                        self.s.runServer();
+                        if self.s.runServer() == 1:
+                                break;
+                        self.tick(self.s.turn);
+                        
+                self.gui.setSign(self.s.sign);
+                while True:
+                        
                         
                         if self.s.turn == 0:
                                 self.s.serverRead();
                                 
-                        if self.s.turn == 1 :
+                        if self.s.turn == 1 and  self.gui.game.move_done == 1:
                                 send_data = 'Cos do wyslania'
-                                #self.s.serverSend(send_data.encode());
-                                
+                                self.s.serverSend(send_data.encode());
+                                self.gui.game.move_done = 0;
+                        
                         self.tick(self.s.turn);
-		
+                        
 	def tick(self,turn):
 		try:
 			self.gui.tick(turn)

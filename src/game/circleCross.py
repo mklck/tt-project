@@ -29,18 +29,26 @@ class Field:
 	pos	: BoardPoint
 
 class CircleCross:
-	def __init__(self):
-		self.fields = list()
-		self.setPlayer()
-
+	def __init__(self, sign):
+            self.fields = list();
+            self.move_done = 0;
+            if sign == 'cross_':
+                self.player = FieldType.cross;
+            if sign == 'circle':
+                self.player = FieldType.circle;
+                
 	def setPlayer(self):
 		self.player = random.choice([FieldType.cross, FieldType.circle])
 
-	def hit(self, bp : BoardPoint):
-		self.checkIfEmpty(bp)
-		field = Field(pos = bp, type=self.player)
-		self.fields.append(field)
-		self.togglePlayer()
+	def hit(self, bp : BoardPoint, turn):
+                if turn == 1:
+                        self.checkIfEmpty(bp)
+                        field = Field(pos = bp, type=self.player)
+                        self.fields.append(field)
+                        #self.togglePlayer()
+                        self.move_done = 1;
+                else:
+                        pass
 
 	def togglePlayer(self):
 		if self.player is FieldType.circle:

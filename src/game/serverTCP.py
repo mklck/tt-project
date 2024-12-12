@@ -27,14 +27,25 @@ class ServerTCP:
         self.turn = -1;
 
     def randomizeOrder(self, s):
+        order_sign = '';
+        
         if random.randint(0, 1) == 1:
-            s.send(self.crypto.encrypt("SERVER_START".encode()));
+            order_sign = "SERVER_START_"
             print("Serwer zaczyna");
             self.turn = 1;
         else:
-            s.send(self.crypto.encrypt("CLIENT_START".encode()));
+            order_sign = "CLIENT_START_"
             print("Klient zaczyna");
             self.turn = 0;
+
+        if random.randint(0, 1) == 1:
+            self.sign = 'cross_'
+            order_sign = order_sign + 'circle';
+        else:
+            self.sign = 'circle'
+            order_sign = order_sign + 'cross_';
+
+        s.send(self.crypto.encrypt(order_sign.encode()));
  
 
     def runServer(self):
@@ -54,7 +65,8 @@ class ServerTCP:
                     self.inputs.append(connection)
                     self.randomizeOrder(connection);
                     self.conn = connection;
-
+                    return 1;
+            return 0;
 
 
     def serverSend(self,send_data: bytes):
