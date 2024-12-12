@@ -17,14 +17,14 @@ class Gui:
 		self.font = pg.font.SysFont('Arial', 48)
 		self.game = CircleCross()
 		
-	def tick(self):
+	def tick(self, turn):
 		for e in pg.event.get():
 			if e.type == pg.QUIT:
 				raise GameQuit()
 			if e.type == pg.MOUSEBUTTONUP:
 				self.handleMouse(*e.pos)
 		self.screen.fill("white")
-		self.drawBoard()
+		self.drawBoard(turn)
 
 		pg.display.flip()
 		self.clock.tick(30)
@@ -49,10 +49,10 @@ class Gui:
 			self.thickness
 		)
 
-	def drawBoard(self):
+	def drawBoard(self, turn):
 		self.drawRect(Point(100, 100), Point(600, 600))
 		self.drawFields()
-		self.drawStatus()
+		self.drawStatus(turn)
 
 	def drawFields(self):
 		for f in self.game.fields:
@@ -93,8 +93,15 @@ class Gui:
 			50,
 			self.thickness
 		)
-	def drawStatus(self):
-		fmt = f'now is {self.game.player.name} move'
-		surface = self.font.render(fmt, True, self.fill)
-		rect = surface.get_rect(center=(self.res.x // 2, 50))
-		self.screen.blit(surface, rect)
+	def drawStatus(self, turn):
+                if turn == -1:      
+                        fmt = 'Oczekiwanie na drugiego gracza'
+                elif turn == 0:
+                        fmt = 'Ruch przeciwnika'
+                elif turn == 1:
+                        fmt = 'Twój ruch'
+                else:
+                        pass
+                surface = self.font.render(fmt, True, self.fill)
+                rect = surface.get_rect(center=(self.res.x // 2, 50))
+                self.screen.blit(surface, rect)

@@ -17,13 +17,14 @@ class Server:
                                 self.s.serverRead();
                                 
                         if self.s.turn == 1 :
-                               self.s.serverSend(send_data.encode());
+                                send_data = 'Cos do wyslania'
+                                #self.s.serverSend(send_data.encode());
                                 
-                        self.tick();
+                        self.tick(self.s.turn);
 		
-	def tick(self):
+	def tick(self,turn):
 		try:
-			self.gui.tick()
+			self.gui.tick(turn)
 		except GameQuit:
 			print('quit game')
 			exit()

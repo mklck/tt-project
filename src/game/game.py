@@ -9,24 +9,25 @@ class Game:
 		self.tcp = ClientTCP()
 		
 	def run(self):
-
                 while True:
                         if self.tcp.connectServer() == 1:
-                                continue;
-                        self.tick();
+                                break;
+                        self.tick(self.tcp.turn);
 
                 while True:
-                        if self.tcp.turn == 0:
-                                self.s.serverRead();
+                        
+                        if self.tcp.turn == 0 or self.tcp.turn == -1:
+                                self.tcp.clientRead();
                                 
                         if self.tcp.turn == 1:
-                               self.s.serverSend(send_data.encode());
+                                send_data = 'Cos do wyslania'
+                                #self.tcp.clientSend(send_data.encode());
                                
-                        self.tick();
+                        self.tick(self.tcp.turn);
                         
-	def tick(self):
+	def tick(self,turn):
 		try:
-			self.gui.tick()
+			self.gui.tick(turn)
 		except GameQuit:
 			print('quit game')
 			exit()

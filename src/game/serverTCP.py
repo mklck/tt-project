@@ -39,18 +39,18 @@ class ServerTCP:
 
     def runServer(self):
         # Wait for at least one of the sockets to be ready for processing
-            readable, _, exceptional = select.select(self.inputs, [], self.inputs, 0)
-
+            readable, _, exceptional = select.select(self.inputs, [], self.inputs, 1)
+            #print("Waiting for new connection");
             for s in readable:
 
                 if s is self.server:
                     # A "readable" server socket is ready to accept a connection
                     connection, client_address = s.accept()
                     print('new connection from', client_address);
-                    
-                    exchange = ex.keyExchange(self.crypto);
+                    connection.setblocking(1)
+                    exchange = ex(self.crypto);
                     exchange.keyTransmissionServer(connection);
-
+                    connection.setblocking(0)
                     self.inputs.append(connection)
                     self.randomizeOrder(connection);
                     self.conn = connection;
@@ -65,7 +65,7 @@ class ServerTCP:
             self.conn.settimeout(0.2)
             try:
                 data = self.conn.recv(1024)
-                print(self.crypto.decrypt(data).decode());
+                #print(self.crypto.decrypt(data).decode());
                 self.turn = 1;
             except:
                 pass

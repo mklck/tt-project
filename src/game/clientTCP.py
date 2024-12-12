@@ -38,7 +38,7 @@ class ClientTCP:
                 print("Serwer zaczyna");
                 self.turn = 0;
             elif len(data.decode()) > 0:
-                print(data.decode());
+                #print(data.decode());
                 self.turn = 1;
                 
         except:
