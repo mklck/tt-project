@@ -16,18 +16,21 @@ class ClientTCP:
         
     def connectServer(self, TCP_IP = '127.0.0.1', TCP_PORT = 5005):
         self.sock.settimeout(0.05)
+        
         try:
+            
             self.sock.connect(('127.0.0.1', 5005));
+            self.sock.settimeout(None)
+            print("Wchodzi1");
             self.exchange = ex(self.crypto);
+ 
             self.exchange.keyTransmissionClient(self.sock);
-
-            
-            
             return 1
         except:
             pass;
             return 0;
- 
+        self.sock.settimeout(None)
+         
     def clientRead(self):
         self.sock.settimeout(0.05)
         
@@ -42,7 +45,6 @@ class ClientTCP:
                     print("Serwer zaczyna");
                     self.turn = 0;
             elif len(data.decode()) > 0:
-                    #print(data.decode());
                     self.turn = 1;
     
             if data.decode()[-6:] == "cross_":
@@ -51,11 +53,16 @@ class ClientTCP:
             elif data.decode()[-6:] == "circle":
                     print("Masz kolko");
                     self.sign = 'circle'
+
+            self.sock.settimeout(None)
+            return data;
             
         except:
             pass
         
         self.sock.settimeout(None)
+        
+        
 
     def clientSend(self, send_data: bytes):
             self.sock.send(self.crypto.encrypt(send_data));

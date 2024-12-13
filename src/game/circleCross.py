@@ -31,6 +31,7 @@ class Field:
 class CircleCross:
 	def __init__(self, sign):
             self.fields = list();
+            self.last = None;
             self.move_done = 0;
             if sign == 'cross_':
                 self.player = FieldType.cross;
@@ -45,7 +46,7 @@ class CircleCross:
                         self.checkIfEmpty(bp)
                         field = Field(pos = bp, type=self.player)
                         self.fields.append(field)
-                        #self.togglePlayer()
+                        self.last = bp;
                         self.move_done = 1;
                 else:
                         pass

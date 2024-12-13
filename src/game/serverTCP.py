@@ -77,8 +77,9 @@ class ServerTCP:
             self.conn.settimeout(0.2)
             try:
                 data = self.conn.recv(1024)
-                #print(self.crypto.decrypt(data).decode());
                 self.turn = 1;
+                self.conn.settimeout(None)
+                return self.crypto.decrypt(data);
             except:
                 pass
             self.conn.settimeout(None)
